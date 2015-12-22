@@ -4,4 +4,4 @@
 ##Objetivo
   Criar um tabuleiro fisico capaz de mover as peças. Quando um jogador fizer seu moimento, esse comando será tranmitido atraves da internet para outro tabuleiro similar. Permitindo asssim um jogo fisico a distancia.
 
-##Saiba mais em nosso [site](remotechess.esy.es)
+##Saiba mais em nosso [site](http://www.remotechess.esy.es)
