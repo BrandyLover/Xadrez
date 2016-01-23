@@ -1,0 +1,9 @@
+D:\VS\UserInterface\UserInterface\bin\Debug\UserInterface.exe.config
+D:\VS\UserInterface\UserInterface\bin\Debug\UserInterface.exe
+D:\VS\UserInterface\UserInterface\bin\Debug\UserInterface.pdb
+D:\VS\UserInterface\UserInterface\obj\Debug\UserInterface.csprojResolveAssemblyReference.cache
+D:\VS\UserInterface\UserInterface\obj\Debug\UserInterface.Form1.resources
+D:\VS\UserInterface\UserInterface\obj\Debug\UserInterface.Properties.Resources.resources
+D:\VS\UserInterface\UserInterface\obj\Debug\UserInterface.csproj.GenerateResource.Cache
+D:\VS\UserInterface\UserInterface\obj\Debug\UserInterface.exe
+D:\VS\UserInterface\UserInterface\obj\Debug\UserInterface.pdb
