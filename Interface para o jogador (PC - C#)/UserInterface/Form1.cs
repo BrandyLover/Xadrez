@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+//using System.Collections.Generic;
+//using System.ComponentModel;
+//using System.Data;
+//using System.Drawing;
 using System.IO;
-using System.Linq;
+//using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace UserInterface {
@@ -57,8 +57,7 @@ namespace UserInterface {
             if (textBox1.Text.Length > 0) {
                 //sendToPhp("put=" + textBox.Text);
                 richTextBox1.AppendText(sendToPhp("put=" + textBox1.Text) + "\r");
-            }
-            else {
+            } else {
                 richTextBox1.AppendText("informe o dado a ser insserido no banco de dados!\r");
             }
         }
@@ -68,27 +67,33 @@ namespace UserInterface {
                 richTextBox1.AppendText(sendToPhp("sys=" + "DONEB") + "\r");
             else
                 richTextBox1.AppendText(sendToPhp("sys=" + "DONEF") + "\r");
+            timer1.Enabled = true;
         }
 
         private void btn_read_Click(object sender, EventArgs e) {
             //sendToPhp("get=");
             //richTextBox.AppendText( sendToPhp("get=") + "\r");
-            string a = sendToPhp("get=");
-            /*string b = string.Empty;
+            string a;
+            if (rb_br.Checked)
+                a = sendToPhp("get=BR&&mov=" + movs.ToString());
+            else
+                a = sendToPhp("get=FR&&mov=" + movs.ToString());
 
-            for (int i = 0; a[i] != 'm' && i<a.Length; i++) {
-                if (Char.IsDigit(a[i]))
+            if (a.Length > 0) {
+                string b = string.Empty;
+                for (int i = 0; i < a.Length && char.IsDigit(a[i]); i++) {
                     b += a[i];
-            }
-            if (b.Length > 0) {
-                int val = int.Parse(b);
-                if (movs < val) {
-                    richTextBox1.AppendText("new mov!\r");
-                    movs = val;
                 }
-            }*/
-
-            richTextBox1.AppendText(a + "\r");
+                if (b.Length > 0) {
+                    timer1.Enabled = false;
+                    int val = int.Parse(b);
+                    if (val > 0) {
+                        richTextBox1.AppendText("new mov!\r");
+                        movs += val;
+                    }
+                }
+                richTextBox1.AppendText(a + "\r");
+            }
         }
 
         private void btn_clear_Click(object sender, EventArgs e) {
@@ -101,9 +106,8 @@ namespace UserInterface {
 
             string b = string.Empty;
 
-            for (int i = 0; a[i] != ' ' && i < a.Length - 1; i++) {
-                if (Char.IsDigit(a[i]))
-                    b += a[i];
+            for (int i = 0; i < a.Length && char.IsDigit(a[i]); i++) {
+                b += a[i];
             }
             if (b.Length > 0) {
                 int val = int.Parse(b);
@@ -113,5 +117,10 @@ namespace UserInterface {
                 }
             }
         }
+
+        /*private void btn_test_Click(object sender, EventArgs e) {
+            string a = sendToPhp("one=test1&&two=test2");       //two parameter in a POST query
+            richTextBox1.AppendText(a + "\r");
+        }*/
     }
 }

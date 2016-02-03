@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.btn_check = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.rb_fr = new System.Windows.Forms.RadioButton();
@@ -32,6 +33,7 @@
             this.btn_read = new System.Windows.Forms.Button();
             this.btn_send = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // btn_check
@@ -55,6 +57,7 @@
             // rb_fr
             // 
             this.rb_fr.AutoSize = true;
+            this.rb_fr.Checked = true;
             this.rb_fr.Location = new System.Drawing.Point(328, 47);
             this.rb_fr.Name = "rb_fr";
             this.rb_fr.Size = new System.Drawing.Size(58, 17);
@@ -121,6 +124,11 @@
             this.textBox1.Size = new System.Drawing.Size(148, 20);
             this.textBox1.TabIndex = 9;
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.btn_read_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -153,6 +161,7 @@
         private System.Windows.Forms.Button btn_read;
         private System.Windows.Forms.Button btn_send;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
