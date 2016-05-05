@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UserInterface.Properties {
+namespace UserInterface_2.Properties {
 
 
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
