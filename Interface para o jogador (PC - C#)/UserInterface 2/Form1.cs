@@ -11,7 +11,7 @@ namespace UserInterface_2 {
 		}
 
 		class Movimento {
-			private int n_movs;
+			private int n_movs = 0;
 			private string[] m = new string[2];
 
 			public Movimento() {
@@ -24,17 +24,12 @@ namespace UserInterface_2 {
 				n_movs = 0;
 			}
 
-			public void AddMovimento(string s) {
-				m[n_movs] = s;
-				n_movs++;
-			}
-
-			public void Um(string m0) {
+			public void SetMov(string m0) {
 				n_movs = 1;
 				m[0] = m0;
 			}
 
-			public void Dois(string m0, string m1) {
+			public void SetMov(string m0, string m1) {
 				n_movs = 2;
 				m[0] = m0;
 				m[1] = m1;
@@ -52,11 +47,10 @@ namespace UserInterface_2 {
 		Movimento mov_meu = new Movimento();			//meus movimentos na ultima rodada
 		Movimento mov_dele = new Movimento();			//movimentos o oponente na ultima rodada
 
-		static bool on;
-		static int n_total_movs = 0, n_error = 0;
+		static int n_total_movs = 0;
+		static string equipe = "BR";
 
-		private string sendToPhp(string Data) {
-			string responseText = null;
+		private string sendToPhp(string text) {
 			try {
 				string url = "http://remotechess.esy.es/MySQLaccess.php";
 				//string url = "http://remotechess.esy.es/echo2i.php";		//versão mais antiga
@@ -65,7 +59,7 @@ namespace UserInterface_2 {
 				HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
 				req.Method = "POST";
 				// = str;//"message=" + str;
-				byte[] postBytes = Encoding.ASCII.GetBytes(Data);
+				byte[] postBytes = Encoding.ASCII.GetBytes(text);
 				req.ContentType = "application/x-www-form-urlencoded";
 				req.ContentLength = postBytes.Length;
 				Stream requestStream = req.GetRequestStream();
@@ -76,34 +70,22 @@ namespace UserInterface_2 {
 				//Stream resStream = response.GetResponseStream();
 
 				var sr = new StreamReader(response.GetResponseStream());
-				responseText = sr.ReadToEnd();
-				n_error = 0;
+				return sr.ReadToEnd();
 
 			} catch (WebException) {
-				responseText = "Please Check Your Internet Connection";
-				if (!timer1.Enabled) {
-					MessageBox.Show("Please Check Your Internet Connection");
-				}
+				return "Please Check Your Internet Connection";
 			} catch (Exception) {
-				responseText = "outro erro";
-			} finally {
-				n_error++;
+				return "outro erro";
 			}
-			//richTextBox.AppendText(responseText + "\r");
-			return responseText;
 		}
-
 		private string parte(string text, int a, int b) {
 			string res = string.Empty;
 			for (int i = a; i < b; i++)
 				res += text[i];
 			return res;
 		}
-
 		private string finder(string text, string target) {
 			string var = string.Empty;
-			string res = string.Empty;
-			//string text = textBox1.Text;
 			int i = 0, s = text.Length, a = 0, b;
 
 			for (i = 0; i < s; i++) {
@@ -125,8 +107,7 @@ namespace UserInterface_2 {
 								b = i - 1;
 							else
 								b = s;
-							res = parte(text, a, b);
-							return res;
+							return parte(text, a, b);
 						} else {
 							bool e = false;
 							for (; (i + 2) < s && !e; i++) {
@@ -147,11 +128,7 @@ namespace UserInterface_2 {
 
 		private bool db_check() {
 			string str1, str2;
-			if (rbt_br.Checked) {
-				str1 = sendToPhp("team=BR");
-			} else {
-				str1 = sendToPhp("team=FR");
-			}
+			str1 = sendToPhp("team="+equipe);
 			str2 = finder(str1, "tstate");
 			if (str2 == "1") {                  //se receber "1" o oponente já concluiu sua jogada, se for "0" ele ainda está movimentando suas peças
 				btn_mover.Enabled = true;
@@ -172,7 +149,7 @@ namespace UserInterface_2 {
 							string m0 = finder(str1, "m0");
 							richTextBox2.AppendText(m0 + "\r");
 							richTextBox1.AppendText("1 (um) moimento recebido\r");
-							mov_dele.Um(m0);                    //mov_dele.AddMovimento(finder(str1, "m0"));
+							mov_dele.SetMov(m0);                    //mov_dele.AddMovimento(finder(str1, "m0"));
 							n_total_movs++;
 							
 							//move a peça
@@ -182,7 +159,7 @@ namespace UserInterface_2 {
 							string m1 = finder(str1, "m1");
 							richTextBox2.AppendText(m0 + "\r" + m1 + "\r");
 							richTextBox1.AppendText("2 (dois) moimentos recebidos\r");
-							mov_dele.Dois(m0, m1);             //mov_dele.SetMovimentos(finder(str1, "m0"), finder(str1, "m1"));
+							mov_dele.SetMov(m0, m1);             //mov_dele.SetMovimentos(finder(str1, "m0"), finder(str1, "m1"));
 							n_total_movs += 2;
 
 							//move as peças
@@ -220,15 +197,11 @@ namespace UserInterface_2 {
 
 		private void mover() {
 			string str1, str2;
-			if (rbt_br.Checked) {
-				str2 = "BR";
-			} else {
-				str2 = "FR";
-			}
+
 			if (mov_meu.GetNumMovs() == 1) {
-				str1 = sendToPhp("mover=" + str2 + "&&m0=" + mov_meu.GetMov(0));
+				str1 = sendToPhp("mover=" + equipe + "&&m0=" + mov_meu.GetMov(0));
 			} else { //mov_meu.GetNumMovs() == 2
-				str1 = sendToPhp("mover=" + str2 + "&&m0=" + mov_meu.GetMov(0) + "&&m1=" + mov_meu.GetMov(1));
+				str1 = sendToPhp("mover=" + equipe + "&&m0=" + mov_meu.GetMov(0) + "&&m1=" + mov_meu.GetMov(1));
 			}
 			str2 = finder(str1, "status");
 			if (str2 == "1") {       //nenhum erro
@@ -284,49 +257,8 @@ namespace UserInterface_2 {
 			return str1;
 		}
 
-		private void trackBar1_ValueChanged(object sender, EventArgs e) {
-			if (trackBar1.Value == 0) {
-				timer1.Enabled = false;
-				pictureBox1.Image = Properties.Resources.white;
-				on = false;
-				label2.Text = "off";
-				label4.Text = " - - -";
-			} else {
-				int n = 11 - trackBar1.Value;
-				timer1.Interval = n * 500;
-				timer1.Enabled = true;
-				label2.Text = "on";
-				label4.Text = n + " s";
-			}
-		}
-
 		private void timer1_Tick(object sender, EventArgs e) {
-			if (on) {
-				pictureBox1.Image = Properties.Resources.white;
-			} else {
-				if (trackBar1.Value < 1) {
-					pictureBox1.Image = Properties.Resources.white;
-				} else if (trackBar1.Value < 3) {
-					pictureBox1.Image = Properties.Resources.blue;
-				} else if (trackBar1.Value < 7) {
-					pictureBox1.Image = Properties.Resources.green;
-				} else {
-					pictureBox1.Image = Properties.Resources.red;
-				}
-				db_check();
-				if (n_error > 4) {
-					timer1.Enabled = false;
-					MessageBox.Show("Please Check Your Internet Connection\rTimer desligado por segurança");
-					pictureBox1.Image = Properties.Resources.white;
-					on = false;
-					label2.Text = "off";
-					label4.Text = " - - -";
-
-					trackBar1.Value = 0;
-					n_error = 0;
-				}
-			}
-			on = !on;			
+			db_check();		
 		}
 
 		private void btn_read_Click(object sender, EventArgs e) {
@@ -341,19 +273,17 @@ namespace UserInterface_2 {
 				btn_check.Enabled = true;
 				btn_read.Enabled = true;
 				timer1.Enabled = true;
+				lb_status.Text = "Espere";
 			}
+			else
+				lb_status.Text = "Jogue";
 		}
 
 		private void btn_undo_Click(object sender, EventArgs e) {
 			string str1, str2;
 			if (mov_dele.GetNumMovs() > 0) {
-				if(rbt_br.Checked) {
-					str2 = "BR";
-				} else {
-					str2 = "FR";
-				}
 
-				str1 = sendToPhp("undo=" + str2 + "&&n=" + mov_dele.GetNumMovs());     //o usuario ai chamar a fução "done" depois de pedir o cancelamento do ultimo moimento do oponente
+				str1 = sendToPhp("undo=" + equipe + "&&n=" + mov_dele.GetNumMovs());     //o usuario ai chamar a fução "done" depois de pedir o cancelamento do ultimo moimento do oponente
 				str2 = finder(str1, "errorn");
 				if (str2.Length > 0) {				//tratamento de possivel erro
 					if (str2 == "2") {
@@ -390,18 +320,55 @@ namespace UserInterface_2 {
 		private void btn_mover_Click(object sender, EventArgs e) {
 			if(textBox1.Text.Length > 0) {
 				if (textBox2.Text.Length > 0) {     //dois movimentos
-					mov_meu.Dois(textBox1.Text, textBox2.Text);
+					mov_meu.SetMov(textBox1.Text, textBox2.Text);
 					mover();
 				} else {                            //um movimento
-					mov_meu.Um(textBox1.Text);
+					mov_meu.SetMov(textBox1.Text);
 					mover();
 				}
 			}
 		}
 
+		private void t_1s_Click(object sender, EventArgs e) {
+			timer1.Interval = 1000;
+			lb_tempo.Text = "1 s.";
+		}
+		private void t_2s_Click(object sender, EventArgs e) {
+			timer1.Interval = 2000;
+			lb_tempo.Text = "2 s.";
+		}
+		private void t_3s_Click(object sender, EventArgs e) {
+			timer1.Interval = 3000;
+			lb_tempo.Text = "3 s.";
+		}
+		private void t_5s_Click(object sender, EventArgs e) {
+			timer1.Interval = 5000;
+			lb_tempo.Text = "5 s.";
+		}
+		private void t_7s_Click(object sender, EventArgs e) {
+			timer1.Interval = 7000;
+			lb_tempo.Text = "7 s.";
+		}
+		private void t_10s_Click(object sender, EventArgs e) {
+			timer1.Interval = 10000;
+			lb_tempo.Text = "10 s.";
+		}
+		private void t_15s_Click(object sender, EventArgs e) {
+			timer1.Interval = 15000;
+			lb_tempo.Text = "15 s.";
+		}
+
+		private void eq_br_Click(object sender, EventArgs e) {
+			equipe = "BR";
+			lb_equipe.Text = equipe;
+		}
+		private void eq_fr_Click(object sender, EventArgs e) {
+			equipe = "FR";
+			lb_equipe.Text = equipe;
+		}
+
 		private void btn_clear_Click(object sender, EventArgs e) {
 			richTextBox1.Clear();
 		}
-
 	}
 }

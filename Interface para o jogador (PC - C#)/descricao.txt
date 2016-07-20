@@ -1,10 +1,10 @@
-UserInterface_2.2
+UserInterface_2.3
 
 Função: 
 	Acessar o banco de dados, ler e armazenar informações nele, possibilitando ao usurio fazer seu movimento e informando o movimeto de seu oponente.
 
 Como usar:
-	Após abrir o aplicativo o usuario deve selecionar um dos radioButons escolhendo entre Brasil ou França. Posteriormente escolher o tempo entre cada leitura no banco de dados (entre 1 e 10 segundos) movendo o trackBar. O Led ao lado piscará caso seja o turno do outro jogador ou ficará aceso caso seja sua vez de jogar.
-	Quando for sua vez de jogar digite seu movimento (ele deve ser inserido de acordo com o sistema de cordenada: letra e numero da casa de origem e letra e numero da casa de destino, exemplo: a1b2, a peça da casa a1 vai para a casa b2) no texBox de cima (deixe o segundo textBox vazio) e clique no botão mover. Caso queria fazer um movimento duplo como matar uma peça ou fazer roque deve digitar um movimento em cada textBox (no caso de matar uma peça, no textBox de cima deve ser inserido o movimento da peça mota para o cemintério [peças brancas na coluna i e pretas na coluna j, ambas de 1 a 16] e no textBox de baixo a outra peça assume a posição da peça morta) e depois clicar no botão mover.
-	Depois de clicar em mover deve esperar até que o aplicativo indique o movimento do oponente. Então o processo se repete.
-	Caso o oponente tenha realizado um movimento invalido, você pode desfazer esse movimento clicando no botão UNDO. Ele será avisado e poderá fazer um novo movimento. Ele também poderá desfazer o movimento que você realizou antes, ou seja, as duas ultimas rodadas podem ser desfeita. A estrutura atual do programa não permite desfazer mais do que duas rodadas.
+	Após abrir o aplicativo o usuario deve selecionar o menu Configurações escolhendo entre Brasil ou França e o tempo entre cada leitura no banco de dados (entre 1 e 15 segundos).
+	Quando for sua vez de jogar digite seu movimento (ele deve ser inserido de acordo com o sistema de cordenada: letra e numero da casa de origem e letra e numero da casa de destino, exemplo: a1b2, a peça da casa a1 vai para a casa b2) no texBox de cima (deixe o segundo textBox vazio) e clique no botão mover. Caso queria fazer um movimento duplo como matar uma peça ou fazer roque deve digitar um movimento em cada textBox (no caso de matar uma peça, no textBox de cima deve ser inserido o movimento da peça mota para o cemintério [peças brancas na coluna i e pretas na coluna j, ambas de 1 a 16] e no textBox de baixo a outra peça assume a posição da peça morta) e depois clicar no botão Mover.
+	Depois de clicar em Mover deve esperar até que o aplicativo indique o movimento do oponente. Então o processo se repete.
+	Caso o oponente tenha realizado um movimento invalido, você pode desfazer esse movimento clicando no botão Desfazer. Ele será avisado e poderá fazer um novo movimento. Ele também poderá desfazer o movimento que você realizou antes, ou seja, as duas ultimas rodadas podem ser desfeita. A estrutura atual do programa não permite desfazer mais do que duas rodadas.
