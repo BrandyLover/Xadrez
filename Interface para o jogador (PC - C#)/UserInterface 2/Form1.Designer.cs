@@ -56,6 +56,14 @@
 			this.equipeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.eq_br = new System.Windows.Forms.ToolStripMenuItem();
 			this.eq_fr = new System.Windows.Forms.ToolStripMenuItem();
+			this.conectarOTabuleiroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.portaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
+			this.conectarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.desconectarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
+			this.começarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.encerrarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -84,6 +92,7 @@
 			// 
 			// btn_check
 			// 
+			this.btn_check.Enabled = false;
 			this.btn_check.Location = new System.Drawing.Point(283, 27);
 			this.btn_check.Name = "btn_check";
 			this.btn_check.Size = new System.Drawing.Size(129, 23);
@@ -230,7 +239,10 @@
 			// 
 			this.configuraçõesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tempo,
-            this.equipeToolStripMenuItem});
+            this.equipeToolStripMenuItem,
+            this.conectarOTabuleiroToolStripMenuItem,
+            this.começarToolStripMenuItem,
+            this.encerrarToolStripMenuItem});
 			this.configuraçõesToolStripMenuItem.Name = "configuraçõesToolStripMenuItem";
 			this.configuraçõesToolStripMenuItem.Size = new System.Drawing.Size(96, 20);
 			this.configuraçõesToolStripMenuItem.Text = "Configurações";
@@ -252,49 +264,49 @@
 			// t_1s
 			// 
 			this.t_1s.Name = "t_1s";
-			this.t_1s.Size = new System.Drawing.Size(141, 22);
+			this.t_1s.Size = new System.Drawing.Size(152, 22);
 			this.t_1s.Text = "1 Segundo";
 			this.t_1s.Click += new System.EventHandler(this.t_1s_Click);
 			// 
 			// t_2s
 			// 
 			this.t_2s.Name = "t_2s";
-			this.t_2s.Size = new System.Drawing.Size(141, 22);
+			this.t_2s.Size = new System.Drawing.Size(152, 22);
 			this.t_2s.Text = "2 Segundos";
 			this.t_2s.Click += new System.EventHandler(this.t_2s_Click);
 			// 
 			// t_3s
 			// 
 			this.t_3s.Name = "t_3s";
-			this.t_3s.Size = new System.Drawing.Size(141, 22);
+			this.t_3s.Size = new System.Drawing.Size(152, 22);
 			this.t_3s.Text = "3 Segundos";
 			this.t_3s.Click += new System.EventHandler(this.t_3s_Click);
 			// 
 			// t_5s
 			// 
 			this.t_5s.Name = "t_5s";
-			this.t_5s.Size = new System.Drawing.Size(141, 22);
+			this.t_5s.Size = new System.Drawing.Size(152, 22);
 			this.t_5s.Text = "5 Segundos";
 			this.t_5s.Click += new System.EventHandler(this.t_5s_Click);
 			// 
 			// t_7s
 			// 
 			this.t_7s.Name = "t_7s";
-			this.t_7s.Size = new System.Drawing.Size(141, 22);
+			this.t_7s.Size = new System.Drawing.Size(152, 22);
 			this.t_7s.Text = "7 Segundos";
 			this.t_7s.Click += new System.EventHandler(this.t_7s_Click);
 			// 
 			// t_10s
 			// 
 			this.t_10s.Name = "t_10s";
-			this.t_10s.Size = new System.Drawing.Size(141, 22);
+			this.t_10s.Size = new System.Drawing.Size(152, 22);
 			this.t_10s.Text = "10 Segundos";
 			this.t_10s.Click += new System.EventHandler(this.t_10s_Click);
 			// 
 			// t_15s
 			// 
 			this.t_15s.Name = "t_15s";
-			this.t_15s.Size = new System.Drawing.Size(141, 22);
+			this.t_15s.Size = new System.Drawing.Size(152, 22);
 			this.t_15s.Text = "15 Segundos";
 			this.t_15s.Click += new System.EventHandler(this.t_15s_Click);
 			// 
@@ -310,16 +322,73 @@
 			// eq_br
 			// 
 			this.eq_br.Name = "eq_br";
-			this.eq_br.Size = new System.Drawing.Size(109, 22);
+			this.eq_br.Size = new System.Drawing.Size(152, 22);
 			this.eq_br.Text = "Brasil";
 			this.eq_br.Click += new System.EventHandler(this.eq_br_Click);
 			// 
 			// eq_fr
 			// 
 			this.eq_fr.Name = "eq_fr";
-			this.eq_fr.Size = new System.Drawing.Size(109, 22);
+			this.eq_fr.Size = new System.Drawing.Size(152, 22);
 			this.eq_fr.Text = "França";
 			this.eq_fr.Click += new System.EventHandler(this.eq_fr_Click);
+			// 
+			// conectarOTabuleiroToolStripMenuItem
+			// 
+			this.conectarOTabuleiroToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.portaToolStripMenuItem,
+            this.conectarToolStripMenuItem,
+            this.desconectarToolStripMenuItem});
+			this.conectarOTabuleiroToolStripMenuItem.Name = "conectarOTabuleiroToolStripMenuItem";
+			this.conectarOTabuleiroToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.conectarOTabuleiroToolStripMenuItem.Text = "Conectar o Tabuleiro";
+			// 
+			// portaToolStripMenuItem
+			// 
+			this.portaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripComboBox1});
+			this.portaToolStripMenuItem.Name = "portaToolStripMenuItem";
+			this.portaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.portaToolStripMenuItem.Text = "Porta";
+			this.portaToolStripMenuItem.DropDownOpening += new System.EventHandler(this.portaToolStripMenuItem_DropDownOpening);
+			// 
+			// toolStripComboBox1
+			// 
+			this.toolStripComboBox1.Name = "toolStripComboBox1";
+			this.toolStripComboBox1.Size = new System.Drawing.Size(121, 23);
+			this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
+			// 
+			// conectarToolStripMenuItem
+			// 
+			this.conectarToolStripMenuItem.Enabled = false;
+			this.conectarToolStripMenuItem.Name = "conectarToolStripMenuItem";
+			this.conectarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.conectarToolStripMenuItem.Text = "Conectar";
+			this.conectarToolStripMenuItem.Click += new System.EventHandler(this.conectarToolStripMenuItem_Click);
+			// 
+			// desconectarToolStripMenuItem
+			// 
+			this.desconectarToolStripMenuItem.Enabled = false;
+			this.desconectarToolStripMenuItem.Name = "desconectarToolStripMenuItem";
+			this.desconectarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.desconectarToolStripMenuItem.Text = "Desconectar";
+			this.desconectarToolStripMenuItem.Click += new System.EventHandler(this.desconectarToolStripMenuItem_Click);
+			// 
+			// começarToolStripMenuItem
+			// 
+			this.começarToolStripMenuItem.Enabled = false;
+			this.começarToolStripMenuItem.Name = "começarToolStripMenuItem";
+			this.começarToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.começarToolStripMenuItem.Text = "Iniciar";
+			this.começarToolStripMenuItem.Click += new System.EventHandler(this.começarToolStripMenuItem_Click);
+			// 
+			// encerrarToolStripMenuItem
+			// 
+			this.encerrarToolStripMenuItem.Enabled = false;
+			this.encerrarToolStripMenuItem.Name = "encerrarToolStripMenuItem";
+			this.encerrarToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.encerrarToolStripMenuItem.Text = "Encerrar";
+			this.encerrarToolStripMenuItem.Click += new System.EventHandler(this.encerrarToolStripMenuItem_Click);
 			// 
 			// Form1
 			// 
@@ -353,7 +422,6 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button btn_check;
         private System.Windows.Forms.Button btn_read;
         private System.Windows.Forms.Button btn_clear;
 		private System.Windows.Forms.Button btn_undo;
@@ -382,6 +450,15 @@
 		private System.Windows.Forms.ToolStripStatusLabel lb_space2;
 		private System.Windows.Forms.ToolStripStatusLabel lb_3;
 		private System.Windows.Forms.ToolStripStatusLabel lb_tempo;
+		private System.Windows.Forms.ToolStripMenuItem conectarOTabuleiroToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem portaToolStripMenuItem;
+		private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
+		private System.Windows.Forms.ToolStripMenuItem conectarToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem desconectarToolStripMenuItem;
+		private System.IO.Ports.SerialPort serialPort1;
+		private System.Windows.Forms.ToolStripMenuItem começarToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem encerrarToolStripMenuItem;
+		private System.Windows.Forms.Button btn_check;
 	}
 }
 

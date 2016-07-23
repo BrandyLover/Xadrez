@@ -6,6 +6,7 @@ using System.Windows.Forms;
 
 namespace UserInterface_2 {
 	public partial class Form1 : Form {
+
 		public Form1() {
 			InitializeComponent();
 		}
@@ -49,6 +50,41 @@ namespace UserInterface_2 {
 
 		static int n_total_movs = 0;
 		static string equipe = "BR";
+
+		private void enivaSerial(string text) {
+/*			int[] v = new int[4];
+			if(text.Length == 4) {
+				v[0] = text[0] - 'a';
+				v[1] = text[1] - '1';
+				v[2] = text[2] - 'a';
+				v[3] = text[3] - '1';
+			} else if(text.Length == 5) {
+				v[0] = text[0] - 'a';
+				v[1] = text[1] - '1';
+				v[2] = text[2] - 'a';
+				v[3] = 10 * (text[3] - '1') + (text[4] - '1');
+			} else
+				return;				*/
+			serialPort1.Write( text.Length.ToString() + text );
+		}
+
+		private string reverso(string text) {
+			char[] c = new char[5];
+			if(text.Length == 4) {
+				c[3] = text[0];
+				c[4] = text[1];
+				c[0] = text[2];
+				c[1] = text[3];
+			}
+			else if(text.Length == 5) {
+				c[3] = text[0];
+				c[4] = text[1];
+				c[0] = text[2];
+				c[1] = text[3];
+				c[2] = text[4];
+			}
+			return c.ToString();
+		}
 
 		private string sendToPhp(string text) {
 			try {
@@ -133,7 +169,7 @@ namespace UserInterface_2 {
 			if (str2 == "1") {                  //se receber "1" o oponente já concluiu sua jogada, se for "0" ele ainda está movimentando suas peças
 				btn_mover.Enabled = true;
 				btn_undo.Enabled = true;
-				btn_check.Enabled = false;
+				//btn_check.Enabled = false;
 				btn_read.Enabled = false;
 				timer1.Enabled = false;
 
@@ -151,8 +187,9 @@ namespace UserInterface_2 {
 							richTextBox1.AppendText("1 (um) moimento recebido\r");
 							mov_dele.SetMov(m0);                    //mov_dele.AddMovimento(finder(str1, "m0"));
 							n_total_movs++;
-							
+
 							//move a peça
+							enivaSerial(m0);
 
 						} else if (str2 == "2") {
 							string m0 = finder(str1, "m0");
@@ -163,14 +200,18 @@ namespace UserInterface_2 {
 							n_total_movs += 2;
 
 							//move as peças
-							
+							enivaSerial(m0);
+							enivaSerial(m1);
+
 						} else {
 							mov_dele.Clear();
 							richTextBox1.AppendText("nenhum movimento\r");
 						}
 					}
 				} else {
-					if(mov_meu.GetNumMovs() == 1) {																			
+					if(mov_meu.GetNumMovs() == 1) {
+						enivaSerial("--" + reverso(mov_meu.GetMov(0)));	//manda o Tabuleiro desfazer o ultimo (indicado pelos dois '-')
+
 						richTextBox1.AppendText("desfazer 1 movimentos:\r" + mov_meu.GetMov(0) + "\r");
 						richTextBox2.Undo();
 						n_total_movs--;
@@ -179,6 +220,9 @@ namespace UserInterface_2 {
 						//desfazer o ultimo movimento (está salvo no objeto "mov_meu" da classe Moimentos)
 
 					} else {
+						enivaSerial("--" + reverso(mov_meu.GetMov(0))); //manda o Tabuleiro desfazer o ultimo (indicado pelos dois '-')
+						enivaSerial("--" + reverso(mov_meu.GetMov(1)));	//pelo numero de caracteres não se confunde com um movimento normal
+
 						richTextBox1.AppendText("desfazer 2 movimentos:\r" + mov_meu.GetMov(0) + "\r" + mov_meu.GetMov(1) + "\r");
 						richTextBox2.Undo();
 						n_total_movs -= 2;
@@ -210,14 +254,19 @@ namespace UserInterface_2 {
 				if (mov_meu.GetNumMovs() == 1) {
 					richTextBox2.AppendText(mov_meu.GetMov(0) + "\r");
 					n_total_movs++;
+
+					enivaSerial(mov_meu.GetMov(0));
 				} else {
 					richTextBox2.AppendText(mov_meu.GetMov(0) + "\r" + mov_meu.GetMov(1) + "\r");
 					n_total_movs += 2;
+
+					enivaSerial(mov_meu.GetMov(0));
+					enivaSerial(mov_meu.GetMov(1));
 				}
 
 				btn_mover.Enabled = false;
 				btn_undo.Enabled = false;
-				btn_check.Enabled = true;
+				//btn_check.Enabled = true;
 				btn_read.Enabled = true;
 				timer1.Enabled = true;
 
@@ -270,7 +319,7 @@ namespace UserInterface_2 {
 			if (!db_check()) {
 				btn_mover.Enabled = false;
 				btn_undo.Enabled = false;
-				btn_check.Enabled = true;
+				//btn_check.Enabled = true;
 				btn_read.Enabled = true;
 				timer1.Enabled = true;
 				lb_status.Text = "Espere";
@@ -282,7 +331,7 @@ namespace UserInterface_2 {
 		private void btn_undo_Click(object sender, EventArgs e) {
 			string str1, str2;
 			if (mov_dele.GetNumMovs() > 0) {
-
+				
 				str1 = sendToPhp("undo=" + equipe + "&&n=" + mov_dele.GetNumMovs());     //o usuario ai chamar a fução "done" depois de pedir o cancelamento do ultimo moimento do oponente
 				str2 = finder(str1, "errorn");
 				if (str2.Length > 0) {				//tratamento de possivel erro
@@ -294,13 +343,18 @@ namespace UserInterface_2 {
 				} else {
 					str2 = finder(str1, "status");
 					if (str2 == "1") {
+						
+						enivaSerial("--" + reverso(mov_dele.GetMov(0))); //manda o Tabuleiro desfazer o ultimo (indicado pelos dois '-')
+						if(mov_dele.GetNumMovs() == 2)
+							enivaSerial("--" + reverso(mov_dele.GetMov(1))); //pelo numero de caracteres não se confunde com um movimento normal
+
 						richTextBox1.AppendText("movimentos desfeitos com sucesso!\r");
 						richTextBox2.Undo();
 						n_total_movs -= mov_dele.GetNumMovs();
 
 						btn_mover.Enabled = false;
 						btn_undo.Enabled = false;
-						btn_check.Enabled = true;
+						//btn_check.Enabled = true;
 						btn_read.Enabled = true;
 						timer1.Enabled = true;
 
@@ -369,6 +423,46 @@ namespace UserInterface_2 {
 
 		private void btn_clear_Click(object sender, EventArgs e) {
 			richTextBox1.Clear();
+		}
+
+		private void conectarToolStripMenuItem_Click(object sender, EventArgs e) {
+			serialPort1.PortName = toolStripComboBox1.SelectedItem.ToString();
+			serialPort1.Open();
+			começarToolStripMenuItem.Enabled = true;
+			toolStripComboBox1.Enabled = false;
+			conectarToolStripMenuItem.Enabled = false;
+			desconectarToolStripMenuItem.Enabled = true;
+		}
+
+		private void desconectarToolStripMenuItem_Click(object sender, EventArgs e) {
+			serialPort1.Close();
+			começarToolStripMenuItem.Enabled = false;
+			toolStripComboBox1.Enabled = true;
+			conectarToolStripMenuItem.Enabled = true;
+			desconectarToolStripMenuItem.Enabled = false;
+		}
+
+		private void portaToolStripMenuItem_DropDownOpening(object sender, EventArgs e) {
+			toolStripComboBox1.Items.Clear();
+			foreach(string element in System.IO.Ports.SerialPort.GetPortNames()) {
+				toolStripComboBox1.Items.Add(element);
+			}
+		}
+
+		private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e) {
+			conectarToolStripMenuItem.Enabled = true;
+		}
+
+		private void começarToolStripMenuItem_Click(object sender, EventArgs e) {
+			encerrarToolStripMenuItem.Enabled = true;
+			começarToolStripMenuItem.Enabled = false;
+			timer1.Enabled = true;
+		}
+
+		private void encerrarToolStripMenuItem_Click(object sender, EventArgs e) {
+			encerrarToolStripMenuItem.Enabled = false;
+			começarToolStripMenuItem.Enabled = true;
+			timer1.Enabled = false;
 		}
 	}
 }
